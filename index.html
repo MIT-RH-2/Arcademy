@@ -1,18 +1,93 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hello, World! - A-Frame</title>
-    <meta name="description" content="Hello, World! - A-Frame">
-    <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
-  </head>
-  <body>
-    <a-scene>
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
-    </a-scene>
-  </body>
+	<head>
+		<meta charset="utf-8" />
+		<title>ARcademy: Making Math Funderstandable!</title>
+		<meta name="description" content="Tracked Controls – A-Frame" />
+		<script src="./js/aframe-master.min.js"></script>
+		<script src="./js/LegacyJSONLoader.js"></script>
+		<script src="./js/TweenMax.min.js"></script>
+		<script src="components/aabb-collider.js"></script>
+		<script src="components/grab.js"></script>
+		<script src="components/ground.js"></script>
+		<script src="components/aframe-physics-system.js"></script>
+		<script src="components/components.js"></script>
+		<script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframe-event-set-component.min.js"></script>
+	</head>
+	<body>
+		<a-scene
+			cursor="rayOrigin: mouse"
+			raycaster="objects: [cube]"
+			physics="gravity:0"
+			updatecubes
+		>
+			<a-assets>
+				<a-mixin
+					id="cube"
+					event-set__grab="material.color: #FFEF4F"
+					event-set__grabend="material.color: #F2E646"
+					event-set__hit="material.color: #F2E646"
+					event-set__hitend="material.color: #EF2D5E"
+					event-set__mousedown="material.color: #FFEF4F"
+					event-set__mouseenter="material.color: #F2E646"
+					event-set__mouseleave="material.color: #EF2D5E"
+					event-set__mouseup="material.color: #F2E646"
+					geometry="primitive: box; height: 0.30; width: 0.30; depth: 0.30"
+					material="color: #EF2D5E;"
+				></a-mixin>
+				<img id="classroom" src="./assets/EL-clean-plate.jpg" />
+			</a-assets>
+
+			<!-- Environment -->
+			<a-sky
+					id="sky"
+					radius="300"
+					src="#classroom"
+					rotation="0 -90 0"
+			></a-sky>
+			<!--
+			<a-entity ground></a-entity>
+			-->
+
+			<!-- A-Frame cubes -->
+			<a-entity position="0 1 -0.5">
+				<a-entity id="cube0" class="cube" mixin="cube" position="-0.60 0.35 0"></a-entity>
+				<a-entity id="cube1" class="cube" mixin="cube" position="0 0.35 0"></a-entity>
+				<a-entity id="cube2" class="cube" mixin="cube" position="0.60 0.35 0"></a-entity>
+
+				<a-entity
+					light="type: point; color: #f4f4f4; intensity: 0.2; distance: 0"
+					position="8 10 18"
+				></a-entity>
+				<a-entity
+					light="type: point; color: #f4f4f4; intensity: 0.6; distance: 0"
+					position="-8 10 -18"
+				></a-entity>
+				<a-entity
+					light="type: ambient; color: #f4f4f4; intensity: 0.4;"
+					position="-8 10 -18"
+				></a-entity>
+			</a-entity>
+
+			<!-- Hands -->
+			<a-entity
+				hand-controls="left"
+				aabb-collider="objects: .cube;"
+				grab
+			></a-entity>
+			<a-entity
+				hand-controls="right"
+				aabb-collider="objects: .cube;"
+				grab
+			></a-entity>
+
+			<!-- Camera -->
+			<a-entity
+				position="0 1.6 2"
+				camera
+				look-controls
+				wasd-controls
+			></a-entity>
+		</a-scene>
+	</body>
 </html>
