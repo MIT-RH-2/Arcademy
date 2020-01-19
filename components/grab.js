@@ -33,6 +33,8 @@ AFRAME.registerComponent('grab', {
     if (this.grabbing) { return; }
     this.grabbing = true;
     this.pressedButtonId = evt.detail.id;
+    console.log('pressed button id:', this.pressedButtonId, 'hitEl:', this.hitEl);
+    // document.querySelector('.equation').setAttribute('value', this.pressedButtonId+'::'+this.hitEl);
     delete this.previousPosition;
   },
 
@@ -41,7 +43,11 @@ AFRAME.registerComponent('grab', {
     if (this.pressedButtonId !== evt.detail.id) { return; }
     this.grabbing = false;
     if (!hitEl) { return; }
+    // if(hitEl.group){
+    //   hitEl.group.active = undefined;
+    // }
     hitEl.removeState(this.GRABBED_STATE);
+    window.upEl(hitEl);
     hitEl.emit('grabend');
     this.hitEl = undefined;
   },
@@ -53,7 +59,9 @@ AFRAME.registerComponent('grab', {
     // If we're already grabbing something you can't grab again.
     if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) { return; }
     hitEl.addState(this.GRABBED_STATE);
+
     this.hitEl = hitEl;
+    window.hitEl(hitEl);
   },
 
   tick: function () {
@@ -85,5 +93,14 @@ AFRAME.registerComponent('grab', {
     };
     this.previousPosition.copy(currentPosition);
     this.deltaPosition = deltaPosition;
+
+    if(this.hitEl){
+        // document.querySelector('.equation').setAttribute('value', this.hitEl.group.position.x );
+
+        if(this.hitEl.group){
+          this.hitEl.group.position.add(this.deltaPosition);
+        }
+      // this.hitEl.delta = this.deltaPosition;
+    }
   }
 });
